@@ -1,0 +1,101 @@
+<div class="workPane">
+  <div class="tablePane">
+    <table class="dataTable mainTable">
+      <tbody>
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">
+            {{ technicalSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ technicalSummary.probability | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ technicalSummary.additionalPrice | number : "" : "it-IT" }}
+          </td>
+        </tr>
+        @for(technicalRisk of technicalRisks; track technicalRisk; let i =
+        $index) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ technicalRisk.name }}</td>
+          <td class="tableCell mainTextStyle centralTableCell">
+            {{ technicalRisk.probability | number }}
+          </td>
+          <td class="tableCell mainTextStyle centralTableCell">
+            {{ technicalRisk.additionalPrice | number }}
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">{{ costSummary.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ costSummary.probability | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ costSummary.additionalPrice | number }}
+          </td>
+        </tr>
+        @for(costRisk of costRisks; track costRisk) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ costRisk.name }}</td>
+          <td class="tableCell mainTextStyle centralTableCell">
+            {{ costRisk.probability | number }}
+          </td>
+          <td class="tableCell mainTextStyle centralTableCell">
+            {{ costRisk.additionalPrice | number }}
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">{{ plannedSummary.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ plannedSummary.probability | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ plannedSummary.additionalPrice | number }}
+          </td>
+        </tr>
+        @for(plannedRisk of plannedRisks; track plannedRisk) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ plannedRisk.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ plannedRisk.probability | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ plannedRisk.additionalPrice | number }}
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">
+            {{ realizationSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ realizationSummary.probability | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ realizationSummary.additionalPrice | number }}
+          </td>
+        </tr>
+        @for(realizationRisk of realizationRisks; track realizationRisk) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ realizationRisk.name }}</td>
+          <td class="tableCell mainTextStyle centralTableCell">
+            {{ realizationRisk.probability | number }}
+          </td>
+          <td class="tableCell mainTextStyle centralTableCell">
+            {{ realizationRisk.additionalPrice | number }}
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainTextStyle">
+            Загальний результат кількості ризиків
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ totalRiskNumber }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

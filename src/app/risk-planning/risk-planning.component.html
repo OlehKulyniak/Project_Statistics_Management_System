@@ -1,0 +1,29 @@
+<div class="workPane">
+  <div class="tablePane">
+    <table class="dataTable mainTable">
+      <tbody>
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle centerCell">№</td>
+          <td class="tableCell centerCell">Назва ризикової події</td>
+          <td class="tableCell centerCell">Назва заходу</td>
+        </tr>
+        @for(riskEvent of riskEvents; track riskEvent; let i = $index) {
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell">{{ i + 1 }}</td>
+          <td class="tableCell">{{ riskEvent }}</td>
+          <td class="tableCell">
+            <select
+              [(ngModel)]="savedRiskSolutions[i]"
+              class="riskSolutionSelect"
+            >
+              @for(riskSolution of riskSolutions; track riskSolution) {
+              <option class="riskSolutionOption">{{ riskSolution }}</option>
+              }
+            </select>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,137 @@
+<div class="workPane">
+  <div class="tablePane">
+    <table class="dataTable mainTable">
+      <tbody>
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">
+            {{ technicalSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +technicalSummary.probability.toFixed(2) | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +((technicalSummary.probability / totalRiskNumber) * 100).toFixed(2)
+                | number
+            }}%
+          </td>
+        </tr>
+        @for(technicalRisk of technicalRisks; track technicalRisk; let i =
+        $index) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ technicalRisk.name }}</td>
+          <td class="tableCell">
+            <input
+              class="inputField centralTableCell tableCell"
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="validateTechnicalGrade(i)"
+              [(ngModel)]="technicalRisk.probability"
+            />
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">{{ costSummary.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +costSummary.probability.toFixed(2) | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +((costSummary.probability / totalRiskNumber) * 100).toFixed(2)
+                | number
+            }}%
+          </td>
+        </tr>
+        @for(costRisk of costRisks; track costRisk; let i = $index) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ costRisk.name }}</td>
+          <td class="tableCell">
+            <input
+              class="inputField centralTableCell tableCell"
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="validateCostGrade(i)"
+              [(ngModel)]="costRisk.probability"
+            />
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">{{ plannedSummary.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +plannedSummary.probability.toFixed(2) | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +((plannedSummary.probability / totalRiskNumber) * 100).toFixed(2)
+                | number
+            }}%
+          </td>
+        </tr>
+        @for(plannedRisk of plannedRisks; track plannedRisk; let i = $index) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ plannedRisk.name }}</td>
+          <td class="tableCell mainTextStyle">
+            <input
+              class="inputField centralTableCell tableCell"
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="validatePlannedGrade(i)"
+              [(ngModel)]="plannedRisk.probability"
+            />
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainBoldTextStyle">
+            {{ realizationSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +realizationSummary.probability.toFixed(2) | number }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +((realizationSummary.probability / totalRiskNumber) * 100).toFixed(2)
+                | number
+            }}%
+          </td>
+        </tr>
+        @for(realizationRisk of realizationRisks; track realizationRisk; let i =
+        $index) {
+        <tr class="tableRow">
+          <td class="tableCell mainTextStyle">{{ realizationRisk.name }}</td>
+          <td class="tableCell">
+            <input
+              class="inputField centralTableCell tableCell"
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="validateRealizationGrade(i)"
+              [(ngModel)]="realizationRisk.probability"
+            />
+          </td>
+        </tr>
+        }
+        <tr class="tableRow summaryTableRow">
+          <td class="tableCell mainTextStyle">
+            Загальний результат кількості ризиків
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ totalRiskNumber }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +((totalSummary / totalRiskNumber) * 100).toFixed(2) | number }}%
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

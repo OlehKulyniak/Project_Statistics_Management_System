@@ -1,0 +1,75 @@
+.workPane {
+  width: 100%;
+  position: relative;
+}
+
+.tablePane {
+  display: flex;
+  justify-content: center;
+}
+
+.tableTitle {
+  margin: 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mainTable {
+  border: solid 2px #000000;
+  border-collapse: collapse;
+}
+
+.tableRow {
+  border: solid 1px #000000;
+}
+
+.summaryTableRow {
+  border: solid 2px #000000;
+}
+
+.tableCell {
+  min-width: 42px;
+  width: fit-content;
+  max-width: 350px;
+  border: solid 1px #000000;
+  padding: 2px;
+  position: relative;
+}
+
+.emptyTableCell {
+  width: 15px;
+}
+
+.centralTableCell {
+  text-align: center;
+}
+
+.mainTextStyle {
+  margin: 0px;
+  font-size: 14px;
+}
+
+.mainBoldTextStyle {
+  font-weight: bold;
+}
+
+.inputField {
+  height: 22px;
+  width: 50px;
+  border: none;
+  padding: 0px;
+}
+
+.inputField::-webkit-outer-spin-button,
+.inputField::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.riskAdditionalPricePane {
+  display: flex;
+}
+
+.addPriceParameterPane {
+  display: flex;
+}

@@ -1,0 +1,653 @@
+<div class="workPane">
+  <p class="tableTitle"></p>
+  <div class="tablePane">
+    <table class="dataTable mainTable">
+      <tbody>
+        <tr class="tableRow">
+          <td rowspan="3" class="tableCell emptyTableCell"></td>
+          <td rowspan="3"></td>
+          <td rowspan="3" class="tableCell emptyTableCell"></td>
+          <td colspan="10" class="tableCell centralTableCell">
+            Оцінки експертів у діапазоні [0...1]
+          </td>
+          <td class="tableCell emptyTableCell"></td>
+          <td colspan="10" class="tableCell centralTableCell">
+            Оцінки експертів з урахуванням їхньої вагомості
+          </td>
+          <td rowspan="3" class="tableCell emptyTableCell"></td>
+          <td rowspan="3"></td>
+        </tr>
+        <tr class="tableRow">
+          @for(item of [].constructor(10); track item; let i = $index) {
+          <td class="tableCell centralTableCell">{{ i + 1 }}</td>
+          }
+          <td class="tableCell centralTableCell">Σ</td>
+          @for(item of [].constructor(10); track item; let i = $index) {
+          <td class="tableCell centralTableCell">{{ i + 1 }}</td>
+          }
+        </tr>
+        <tr class="tableRow">
+          <td colspan="10" class="tableCell centralTableCell">
+            Коефіцієнти вагомості кожного з експертів
+          </td>
+          <td class="tableCell emptyTableCell"></td>
+          @for(item of [].constructor(10); track item) {
+          <td class="tableCell emptyTableCell"></td>
+          }
+        </tr>
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainBoldTextStyle">1</td>
+          <td class="tableCell mainBoldTextStyle">
+            {{ technicalRiskSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +getSumOfElements(getRisksProbability(technicalRisks)).toFixed(2)
+                | number
+            }}
+          </td>
+          @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainBoldTextStyle">
+            {{ technicalRiskSummaryPrice.expectedPrice | number }}
+          </td> -->
+          } @else {
+          <!-- <td class="tableCell emptyTableCell"></td> -->
+          } @for(grade of technicalRiskSummary.grades; track grade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ grade | number }}
+          </td>
+          }
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{ getSumOfElements(technicalRiskSummary.grades) | number }}
+          </td>
+          @for(weightedGrade of technicalRiskSummary.weightedGrades; track
+          weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ technicalRiskSummaryPrice.additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ technicalRiskSummaryPrice.finalPrice | number }}
+          </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{
+              +getAverageOfElements(
+                technicalRiskSummary.weightedGrades
+              ).toFixed(2) | number
+            }}
+          </td>
+
+          <td class="tableCell mainTextStyle">
+            {{
+              getGradeTitle(
+                getAverageOfElements(technicalRiskSummary.weightedGrades)
+              )
+            }}
+          </td>
+          }
+        </tr>
+        @for(technicalRisk of technicalRisks; track technicalRisk; let i =
+        $index) {
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainTextStyle">{{ i + 1 }}</td>
+          <td class="tableCell mainTextStyle">
+            {{ technicalRisk.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ technicalRisk.probability | number }}
+          </td>
+          @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ technicalRiskPrices[i].expectedPrice | number }}
+          </td> -->
+          } @else {
+          <!-- <td class="tableCell emptyTableCell"></td> -->
+
+          } @for(grade of technicalRisk.grades; track grade; let j = $index) {
+          <td class="tableCell">
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="
+                updateRiskTypeRisks(
+                  i,
+                  j,
+                  $event,
+                  technicalRisks,
+                  technicalRiskSummary,
+                  techWeightedExpertGrades
+                )
+              "
+              [ngModel]="technicalRisk.grades[j]"
+              class="tableCell centralTableCell inputField"
+            />
+          </td>
+          }
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ getAverageOfElements(technicalRisk.grades).toFixed(2) }}
+          </td>
+          @for(weightedGrade of technicalRisk.weightedGrades; track
+          weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ technicalRiskPrices[i].additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ technicalRiskPrices[i].finalPrice | number }}
+          </td> -->
+          @if(i == technicalRisks.length - 2) {
+          <td class="tableCell mainTextStyle">
+            Max = {{ techMaxAdditionalPrice | number }}
+          </td>
+          } @else if(i == technicalRisks.length - 1) {
+          <td class="tableCell mainTextStyle">
+            Min = {{ techMinAdditionalPrice | number }}
+          </td>
+          } @else {
+          <td class="tableCell emptyCell"></td>
+          }
+          <!-- <td class="tableCell mainTextStyle">
+            {{
+            getPriceGradeTitle(
+              technicalRiskPrices[i].additionalPrice,
+              riskMinAdditionalPrice,
+              riskIntervalSize
+              )
+              }}
+            </td> -->
+
+          } @else {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +techWeightedExpertGrades[i].toFixed(2) | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ getGradeTitle(techWeightedExpertGrades[i]) }}
+          </td>
+          }
+        </tr>
+        }
+
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainBoldTextStyle">2</td>
+          <td class="tableCell mainBoldTextStyle">
+            {{ costRiskSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +getSumOfElements(getRisksProbability(costRisks)).toFixed(2)
+                | number
+            }}
+          </td>
+          @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainBoldTextStyle">
+            {{ costRiskSummaryPrice.expectedPrice | number }}
+          </td> -->
+          } @else {
+          <!-- <td class="tableCell emptyTableCell"></td> -->
+          } @for(grade of costRiskSummary.grades; track grade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ grade | number }}
+          </td>
+          }
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{ getSumOfElements(costRiskSummary.grades) | number }}
+          </td>
+          @for(weightedGrade of costRiskSummary.weightedGrades; track
+          weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ costRiskSummaryPrice.additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ costRiskSummaryPrice.finalPrice | number }}
+          </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{
+              +getAverageOfElements(costRiskSummary.weightedGrades).toFixed(2)
+                | number
+            }}
+          </td>
+
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              getGradeTitle(
+                getAverageOfElements(costRiskSummary.weightedGrades)
+              )
+            }}
+          </td>
+          }
+        </tr>
+        @for(costRisk of costRisks; track costRisk; let i = $index) {
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainTextStyle">{{ i + 1 }}</td>
+          <td class="tableCell mainTextStyle">{{ costRisk.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ costRisk.probability | number }}
+          </td>
+          <!-- @if(isPriceAnalysis) {
+           <td class="tableCell mainTextStyle">
+            {{ technicalRiskPrices[i].expectedPrice | number }}
+          </td>
+          } @else {
+          <td class="tableCell emptyTableCell"></td>
+
+          } -->
+          @for(grade of costRisk.grades; track grade; let j = $index) {
+          <td class="tableCell">
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="
+                updateRiskTypeRisks(
+                  i,
+                  j,
+                  $event,
+                  costRisks,
+                  costRiskSummary,
+                  costWeightedExpertGrades
+                )
+              "
+              [ngModel]="costRisk.grades[j]"
+              class="centralTableCell inputField"
+            />
+          </td>
+          }
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +getAverageOfElements(costRisk.grades).toFixed(2) | number }}
+          </td>
+          @for(weightedGrade of costRisk.weightedGrades; track weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ costRiskPrices[i].additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ costRiskPrices[i].finalPrice | number }}
+          </td>
+          @if(i == costRisks.length - 2) {
+            <td class="tableCell mainTextStyle">
+              Max = {{ costMaxAdditionalPrice | number }}
+            </td>
+            } @else if(i == costRisks.length - 1) {
+              <td class="tableCell mainTextStyle">
+                Min = {{ costMinAdditionalPrice | number }}
+              </td>
+              } @else {
+                <td class="tableCell emptyCell"></td>
+                }
+                <td class="tableCell mainTextStyle">
+                  {{
+                    getPriceGradeTitle(
+                      costRiskPrices[i].additionalPrice,
+                      riskMinAdditionalPrice,
+                      riskIntervalSize
+                      )
+                      }}
+                    </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +costWeightedExpertGrades[i].toFixed(2) | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ getGradeTitle(costWeightedExpertGrades[i]) }}
+          </td>
+          }
+        </tr>
+        }
+
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainBoldTextStyle">3</td>
+          <td class="tableCell mainBoldTextStyle">
+            {{ plannedRiskSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +getSumOfElements(getRisksProbability(plannedRisks)).toFixed(2)
+                | number
+            }}
+          </td>
+          <!-- @if(isPriceAnalysis) {
+           <td class="tableCell mainBoldTextStyle">
+            {{ plannedRiskSummaryPrice.expectedPrice | number }}
+          </td>
+          } @else {
+          <td class="tableCell emptyTableCell"></td>
+          }  -->
+          @for(grade of plannedRiskSummary.grades; track grade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ grade | number }}
+          </td>
+          }
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{ getSumOfElements(plannedRiskSummary.grades) | number }}
+          </td>
+          @for(weightedGrade of plannedRiskSummary.weightedGrades; track
+          weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ plannedRiskSummaryPrice.additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ plannedRiskSummaryPrice.finalPrice | number }}
+          </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{
+              +getAverageOfElements(plannedRiskSummary.weightedGrades).toFixed(
+                2
+              ) | number
+            }}
+          </td>
+
+          <td class="tableCell mainTextStyle">
+            {{
+              getGradeTitle(
+                getAverageOfElements(plannedRiskSummary.weightedGrades)
+              )
+            }}
+          </td>
+          }
+        </tr>
+        @for(plannedRisk of plannedRisks; track plannedRisk; let i = $index) {
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainTextStyle">{{ i + 1 }}</td>
+          <td class="tableCell mainTextStyle">{{ plannedRisk.name }}</td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ plannedRisk.probability | number }}
+          </td>
+          <!-- @if(isPriceAnalysis) {
+           <td class="tableCell mainTextStyle">
+            {{ plannedRiskPrices[i].expectedPrice | number }}
+          </td>
+          } @else {
+          <td class="tableCell emptyTableCell"></td>
+          }  -->
+          @for(grade of plannedRisk.grades; track grade; let j = $index) {
+          <td class="tableCell">
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="
+                updateRiskTypeRisks(
+                  i,
+                  j,
+                  $event,
+                  plannedRisks,
+                  plannedRiskSummary,
+                  planWeightedExpertGrades
+                )
+              "
+              [ngModel]="plannedRisk.grades[j]"
+              class="centralTableCell inputField"
+            />
+          </td>
+          }
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ getAverageOfElements(plannedRisk.grades).toFixed(2) }}
+          </td>
+          @for(weightedGrade of plannedRisk.weightedGrades; track weightedGrade)
+          {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ plannedRiskPrices[i].additionalPrice | number }}
+          </td> -->
+          <!-- <td class="tableCell mainTextStyle">
+            {{ plannedRiskPrices[i].finalPrice | number }}
+          </td> -->
+          @if(i == plannedRisks.length - 2) {
+          <td class="tableCell mainTextStyle">
+            Max = {{ planMaxAdditionalPrice | number }}
+          </td>
+          } @else if(i == plannedRisks.length - 1) {
+          <td class="tableCell mainTextStyle">
+            Min = {{ planMinAdditionalPrice | number }}
+          </td>
+          } @else {
+          <td class="tableCell emptyCell"></td>
+          }
+          <!-- <td class="tableCell mainTextStyle">
+          {{
+            getPriceGradeTitle(
+              plannedRiskPrices[i].additionalPrice,
+              planMinAdditionalPrice,
+              riskIntervalSize
+              )
+              }}
+            </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +planWeightedExpertGrades[i].toFixed(2) | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ getGradeTitle(planWeightedExpertGrades[i]) }}
+          </td>
+          }
+        </tr>
+        }
+
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainBoldTextStyle">4</td>
+          <td class="tableCell mainBoldTextStyle">
+            {{ realizationRiskSummary.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +getSumOfElements(getRisksProbability(realizationRisks)).toFixed(
+                2
+              ) | number
+            }}
+          </td>
+          <!-- @if(isPriceAnalysis) {
+           <td class="tableCell mainBoldTextStyle">
+            {{ realizationRiskSummaryPrice.expectedPrice | number }}
+          </td>
+          } @else {
+          <td class="tableCell centralTableCell emptyTableCell"></td>
+          }  -->
+          @for(grade of realizationRiskSummary.grades; track grade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ grade | number }}
+          </td>
+          }
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{ getSumOfElements(realizationRiskSummary.grades) | number }}
+          </td>
+          @for(weightedGrade of realizationRiskSummary.weightedGrades; track
+          weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ realizationRiskSummaryPrice.additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ realizationRiskSummaryPrice.finalPrice | number }}
+          </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainBoldTextStyle">
+            {{
+              +getAverageOfElements(
+                realizationRiskSummary.weightedGrades
+              ).toFixed(2) | number
+            }}
+          </td>
+
+          <td class="tableCell mainTextStyle">
+            {{
+              getGradeTitle(
+                getAverageOfElements(realizationRiskSummary.weightedGrades)
+              )
+            }}
+          </td>
+          }
+        </tr>
+        @for(realizationRisk of realizationRisks; track realizationRisk; let i =
+        $index) {
+        <tr class="tableRow">
+          <td class="tableCell centralTableCell mainTextStyle">{{ i + 1 }}</td>
+          <td class="tableCell mainTextStyle">
+            {{ realizationRisk.name }}
+          </td>
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ realizationRisk.probability | number }}
+          </td>
+          <!-- @if(isPriceAnalysis) {
+           <td class="tableCell mainTextStyle">
+              {{ realizationRiskPrices[i].expectedPrice | number }}
+            </td>
+          } @else {
+          <td class="tableCell emptyTableCell"></td>
+          }  -->
+          @for(grade of realizationRisk.grades; track grade; let j = $index) {
+          <td class="tableCell">
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              (change)="
+                updateRiskTypeRisks(
+                  i,
+                  j,
+                  $event,
+                  realizationRisks,
+                  realizationRiskSummary,
+                  realWeightedExpertGrades
+                )
+              "
+              [ngModel]="realizationRisk.grades[j]"
+              class="centralTableCell inputField"
+            />
+          </td>
+          }
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{
+              +getAverageOfElements(realizationRisk.grades).toFixed(2) | number
+            }}
+          </td>
+          @for(weightedGrade of realizationRisk.weightedGrades; track
+          weightedGrade) {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ weightedGrade | number }}
+          </td>
+          } @if(isPriceAnalysis) {
+          <!-- <td class="tableCell mainTextStyle">
+            {{ realizationRiskPrices[i].additionalPrice | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ realizationRiskPrices[i].finalPrice | number }}
+          </td>
+          @if(i == realizationRisks.length - 2) {
+        <td class="tableCell mainTextStyle">
+          Max = {{ realMaxAdditionalPrice | number }}
+        </td>
+        } @else if(i == realizationRisks.length - 1) {
+          <td class="tableCell mainTextStyle">
+            Min = {{ realMinAdditionalPrice | number }}
+          </td>
+          } @else {
+            <td class="tableCell emptyCell"></td>
+            }
+            <td class="tableCell mainTextStyle">
+              {{
+                getPriceGradeTitle(
+                  realizationRiskPrices[i].additionalPrice,
+                  riskMinAdditionalPrice,
+                  riskIntervalSize
+                  )
+                  }}
+                </td> -->
+          } @else {
+          <td class="tableCell centralTableCell mainTextStyle">
+            {{ +realWeightedExpertGrades[i].toFixed(2) | number }}
+          </td>
+          <td class="tableCell mainTextStyle">
+            {{ getGradeTitle(realWeightedExpertGrades[i]) }}
+          </td>
+          }
+        </tr>
+        }
+      </tbody>
+    </table>
+    <!-- @if(isPriceAnalysis) {
+        <div class="riskAdditionalPricePane">
+          <table class="dataTable mainTable">
+            <tbody>
+              <tr class="tableRow">
+                <td class="mainTextStyle">Max =</td>
+                <td class="mainTextStyle">
+                  {{ this.riskMaxAdditionalPrice | number }}
+                </td>
+              </tr>
+              <tr class="tableRow">
+                <td class="mainTextStyle">Min =</td>
+                <td class="mainTextStyle">
+                  {{ this.riskMinAdditionalPrice | number }}
+                </td>
+              </tr>
+              <tr class="tableRow">
+                <td class="mainTextStyle">Mpr =</td>
+                <td class="mainTextStyle">{{ this.riskIntervalSize | number }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="dataTable intervalTable">
+            <tbody>
+              <tr class="tableRow">
+                <td class="tableCell mainTextStyle">Інтервал</td>
+                <td class="tableCell mainTextStyle">Початок</td>
+                <td class="tableCell mainTextStyle">Кінець</td>
+              </tr>
+              @for(item of [].constructor(3); track item; let i = $index ) {
+                <tr class="tableRow">
+                  <td class="tableCell">{{ i + 1 }}</td>
+                  <td class="tableCell">
+                    {{
+                      +(
+                        this.riskMinAdditionalPrice +
+                        this.riskIntervalSize * i
+                        ).toFixed(2) | number
+                        }}
+                      </td>
+                      <td class="tableCell">
+                        {{
+                          +(
+                            this.riskMinAdditionalPrice +
+                            this.riskIntervalSize * (i + 1)
+                            ).toFixed(2) | number
+                            }}
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+  } -->
+  </div>
+</div>

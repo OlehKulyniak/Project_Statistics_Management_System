@@ -1,0 +1,48 @@
+<div class="navigationButtonPane">
+  <button
+    class="profileButton"
+    routerLink="risk/identification/sources"
+    routerLinkActive="selected"
+  >
+    Risk Identification
+  </button>
+  <button
+    class="profileButton"
+    routerLink="risk/identification/events"
+    routerLinkActive="selected"
+  >
+    Risk Identification Event
+  </button>
+  <button
+    class="profileButton"
+    routerLink="risk/analysis/probability"
+    routerLinkActive="selected"
+    [info]="{ isPriceAnalysis: false }"
+  >
+    Risk Analysis
+  </button>
+  <button
+    class="profileButton"
+    routerLink="risk/analysis/price"
+    routerLinkActive="selected"
+    [info]="{ isPriceAnalysis: true }"
+  >
+    Risk Analysis Price
+  </button>
+  <button
+    class="profileButton"
+    routerLink="risk/planning"
+    routerLinkActive="selected"
+  >
+    Risk Planning
+  </button>
+  <button
+    class="profileButton"
+    routerLink="risk/summary"
+    routerLinkActive="selected"
+  >
+    Risk Summary
+  </button>
+</div>
+
+<router-outlet />

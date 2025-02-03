@@ -1,0 +1,32 @@
+.navigationButtonPane {
+  width: 100%;
+  display: flex;
+}
+
+.profileButton {
+  height: 23px;
+  width: 280px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 2px;
+  font-family: sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-sizing: content-box;
+  transition: 0.2s ease;
+  margin-bottom: 10px;
+}
+
+.profileButton:hover {
+  background-color: #fbf7f7;
+}
+
+.profileButton:active {
+  background-color: #ececec;
+}
+
+.selected {
+  background-color: #ececec;
+}
